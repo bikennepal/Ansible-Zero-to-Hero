@@ -1,0 +1,161 @@
+# configuration management
+Ansible automates the management of remote systems and controls their desired state. A basic Ansible environment has three main components:
+Control node: A system on which Ansible is installed. You run Ansible commands such as ansible or ansible-inventory on a control node.
+Managed node: A remote system, or host, that Ansible controls.
+Inventory: A list of managed nodes that are logically organized. You create an inventory on the control node to describe host deployments to Ansible.
+
+# Why to choose Ansible over other configuration tools 
+Ans: Please get the difference as this is important questions.
+# Ansible is an agentless automation tool that you install on a single host (referred to as the control node).
+#Ansible works by connecting to managed nodes and pushing out small programs, called "Ansible modules," to them.over ssh or other protocal.
+
+
+# Building an inventory
+Inventories organize managed nodes in centralized files that provide Ansible with system information and network locations:
+
+inventory file example:
+ansible-inventory -i inventory.yaml --list:
+virutalmachines:
+  hosts:
+    vm01:
+      ansible_host: 192.168.0.2
+    vm02:
+      ansible_host: 192.168.0.2
+    vm03:
+      ansible_host: 192.168.0.2
+
+ansible virtualmachines -m ping -i inventory.yaml:
+metagroups: 
+Create a metagroup that organizes multiple groups in your inventory with the following syntax:
+metagroupname:
+  children:
+
+  AnsiblePlaybook/inventory:
+# leafs:
+#   hosts:
+#     leaf01:
+#       ansible_host: 192.0.2.100
+#     leaf02:
+#       ansible_host: 192.0.2.110
+
+# spines:
+#   hosts:
+#     spine01:
+#       ansible_host: 192.0.2.120
+#     spine02:
+#       ansible_host: 192.0.2.130
+
+# network:
+#   children:
+#     leafs:
+#     spines:
+
+# webservers:
+#   hosts:
+#     webserver01:
+#       ansible_host: 192.0.2.140
+#     webserver02:
+#       ansible_host: 192.0.2.150
+
+# datacenter:
+#   children:
+#     network:
+#     webservers:
+
+
+Create variables:
+# Variables set values for managed nodes, such as the IP address, FQDN, operating system, and SSH user, so you do not need to pass them when running Ansible commands.
+Example: 
+
+webservers:
+  hosts:
+    webserver01:
+      ansible_host: 192.0.2.140
+      http_port: 80
+    webserver02:
+      ansible_host: 192.0.2.150
+      http_port: 443
+  vars:
+    ansible_user: my_server_user
+
+Creating a AnsiblePlaybook/inventory:
+
+Playbooks are automation blueprints, in YAML format, that Ansible uses to deploy and configure managed nodes.
+
+Playbook
+A list of plays that define the order in which Ansible performs operations, from top to bottom, to achieve an overall goal.:
+
+Play
+An ordered list of tasks that maps to managed nodes in an inventory.:
+
+Task
+A list of one or more modules that defines the operations that Ansible performs.:
+
+Module
+A unit of code or binary that Ansible runs on managed nodes. Ansible modules are grouped in collections with a Fully Qualified Collection Name (FQCN) for each module.:
+
+playbook Example:
+
+- name: my first playbook
+    hosts: virtualmachines
+    tasks:
+    - name: ping my hosts
+      ansible.bullitin.ping:
+    - name: Print message
+     ansible.builtin.debug:
+       msg: Hello world
+
+Run your playbook.:
+
+ansible-playbook -i inventory.yaml playbook.yaml
+
+Ansible concepts:
+
+Control node: The machine from which you run the Ansible CLI tools (ansible-playbook , ansible, ansible-vault and others).
+Managed nodes: Also referred to as ‘hosts’, these are the target devices (servers, network appliances or any computer) you aim to manage with Ansible
+Inventory: A list of managed nodes provided by one or more ‘inventory sources’. Your inventory can specify information specific to each node, like IP address. It is also used for assigning groups, that both allow for node selection in the Play and bulk variable assignment.
+Playbooks: They contain Plays (which are the basic unit of Ansible execution). This is both an ‘execution concept’ and how we describe the files on which ansible-playbook operates. Playbooks are written in YAML and are easy to read, write, share and understand.
+Plays: The main context for Ansible execution, this playbook object maps managed nodes (hosts) to tasks. The Play contains variables, roles and an ordered lists of tasks and can be run repeatedly. 
+Roles: A limited distribution of reusable Ansible content (tasks, handlers, variables, plugins, templates and files) for use inside of a Play. To use any Role resource, the Role itself must be imported into the Play.
+Tasks: The definition of an ‘action’ to be applied to the managed host. Tasks must always be contained in a Play, directly or indirectly (Role, or imported/included task list file). You can execute a single task once with an ad hoc command using ansible or ansible-console (both create a virtual Play).
+Handlers: A special form of a Task, that only executes when notified by a previous task which resulted in a ‘changed’ status
+Modules: The code or binaries that Ansible copies to and executes on each managed node (when needed) to accomplish the action defined in each Task.
+Plugins: Pieces of code that expand Ansible’s core capabilities, they can control how you connect to a managed node (connection plugins), manipulate data (filter plugins) and even control what is displayed in the console (callback plugins). See Working with plugins for details.
+Collections: A format in which Ansible content is distributed that can contain playbooks, roles, modules, and plugins. You can install and use collections through Ansible Galaxy. To learn more about collections, see Using Ansible collections. Collection resources can be used independently and discretely from each other
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
