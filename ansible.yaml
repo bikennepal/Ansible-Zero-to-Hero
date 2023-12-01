@@ -123,6 +123,12 @@ Modules: The code or binaries that Ansible copies to and executes on each manage
 Plugins: Pieces of code that expand Ansible’s core capabilities, they can control how you connect to a managed node (connection plugins), manipulate data (filter plugins) and even control what is displayed in the console (callback plugins). See Working with plugins for details.
 Collections: A format in which Ansible content is distributed that can contain playbooks, roles, modules, and plugins. You can install and use collections through Ansible Galaxy. To learn more about collections, see Using Ansible collections. Collection resources can be used independently and discretely from each other
 
+Getting started with Execution Environments: 
+You can run Ansible automation in containers, like any other modern software application. Ansible uses container images known as Execution Environments (EE) that act as control nodes.
+Ansible Execution Environments aim to resolve complexity issues and provide all the benefits you can get from containerization.
+
+
+
 
 
 
